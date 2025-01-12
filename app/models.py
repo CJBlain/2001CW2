@@ -42,3 +42,18 @@ class TrailFeature(db.Model):
 
     def __repr__(self):
         return f"<TrailFeature {self.feature_name}>"
+    
+class TrailOwnership(db.Model):
+    __tablename__ = 'trailownership'
+
+    ownership_id = db.Column(db.Integer, primary_key=True)  
+    trail_id = db.Column(db.Integer, db.ForeignKey('trail.trail_id'), nullable=False)  
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  
+    ownership_date = db.Column(db.Date)  
+
+    
+    trail = db.relationship('Trail', backref=db.backref('ownerships', lazy=True))
+    user = db.relationship('User', backref=db.backref('owned_trails', lazy=True))
+
+    def __repr__(self):
+        return f"<TrailOwnership {self.ownership_id}>"
