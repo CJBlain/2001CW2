@@ -21,7 +21,7 @@ class Route(db.Model):
     __tablename__ = 'route'
 
     route_id = db.Column(db.Integer, primary_key=True)  
-    trail_id = db.Column(db.Integer, db.ForeignKey('trail.trail_id'), nullable=False)  # Foreign key to Trail
+    trail_id = db.Column(db.Integer, db.ForeignKey('trail.trail_id'), nullable=False)  
     route_type = db.Column(db.String(50))  
 
    
@@ -29,3 +29,16 @@ class Route(db.Model):
 
     def __repr__(self):
         return f"<Route {self.route_id}>"
+    
+class TrailFeature(db.Model):
+    __tablename__ = 'trailfeature'
+
+    trail_feature_id = db.Column(db.Integer, primary_key=True)  
+    trail_id = db.Column(db.Integer, db.ForeignKey('trail.trail_id'), nullable=False)  
+    feature_name = db.Column(db.String(100), nullable=False)  
+
+    
+    trail = db.relationship('Trail', backref=db.backref('features', lazy=True))
+
+    def __repr__(self):
+        return f"<TrailFeature {self.feature_name}>"
