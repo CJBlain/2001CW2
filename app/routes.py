@@ -1,13 +1,12 @@
 from flask import Blueprint, request, jsonify
 from .models import db, Trail, Route, TrailFeature, TrailOwnership, User
-
+from . import db
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def home():
     return "Welcome to the TrailApp!"
-
 
 # ----------- TRAIL endpoints -----------
 @main.route('/trails', methods=['GET'])
@@ -25,7 +24,7 @@ def add_trail():
         Difficulty=data['Difficulty'],
         Location=data['Location'],
         Length=data['Length'],
-        Elavationgain=data['Elavationgain']
+        Elevationgain=data['Elavationgain']
     )
     db.session.add(new_trail)
     db.session.commit()
@@ -46,7 +45,7 @@ def update_trail(id):
     trail.Difficulty = data.get('Difficulty', trail.Difficulty)
     trail.Location = data.get('Location', trail.Location)
     trail.Length = data.get('Length', trail.Length)
-    trail.Elavationgain = data.get('Elavationgain', trail.Elavationgain)
+    trail.Elevationgain = data.get('Elevationgain', trail.Elevationgain)
 
     db.session.commit()
     return jsonify(trail.to_dict())

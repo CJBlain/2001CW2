@@ -1,69 +1,88 @@
 from flask_sqlalchemy import SQLAlchemy
+from app.db import db
 
-db = SQLAlchemy()
 
 class Trail(db.Model):
-    __tablename__ = 'Trail'  # Corrected to match your specification
-    
-    TrailID = db.Column(db.Integer, primary_key=True)  # Primary key is TrailID
-    trail_name = db.Column(db.String(100), nullable=False)  
-    trail_summary = db.Column(db.String(200))  
-    trail_description = db.Column(db.String(500)) 
-    difficulty = db.Column(db.String(50))  
-    location = db.Column(db.String(100))   
-    length = db.Column(db.Float) 
-    elevation_gain = db.Column(db.Float)  
+    __tablename__ = 'Trail'
+    __table_args__ = {'schema': 'CW2'}
+    TrailID = db.Column(db.Integer, primary_key=True)
+    TrailName = db.Column(db.String(120))
+    TrailSummary = db.Column(db.String(500))
+    TrailDescription = db.Column(db.Text)
+    Difficulty = db.Column(db.String(50))
+    Location = db.Column(db.String(120))
+    Length = db.Column(db.Float)
+    ElevationGain = db.Column(db.Float)
 
-    def __repr__(self):
-        return f"<Trail {self.trail_name}>"
+    def to_dict(self):
+        return {
+            'TrailID': self.id,
+            'TrailName': self.TrailName,
+            'TrailSummary': self.TrailSummary,
+            'TrailDescription': self.TrailDescription,
+            'Difficulty': self.Difficulty,
+            'Location': self.Location,
+            'Length': self.Length,
+            'ElevationGain': self.ElevationGain
+        }
 
 class Route(db.Model):
-    __tablename__ = 'Route'  # Corrected to match your specification
+    __tablename__ = 'Route'
+    __table_args__ = {'schema': 'CW2'}
+    RouteID = db.Column(db.Integer, primary_key=True)
+    TrailID = db.Column(db.Integer, db.ForeignKey('trail.id'))
+    RouteType = db.Column(db.String(100))
 
-    route_id = db.Column(db.Integer, primary_key=True)
-    TrailID = db.Column(db.Integer, db.ForeignKey('Trail.TrailID'), nullable=False)  # Foreign key now correctly references Trail.TrailID
-    route_type = db.Column(db.String(50))
+    def to_dict(self):
+        return {
+            'TrailID': self.TrailID,
+            'RouteID': self.RouteID,
+            'RouteType': self.RouteType
+        }
 
-    trail = db.relationship('Trail', backref=db.backref('routes', lazy=True), foreign_keys=[TrailID])  # Specify foreign_keys explicitly
-
-    def __repr__(self):
-        return f"<Route {self.route_id}>"
-    
 class TrailFeature(db.Model):
-    __tablename__ = 'TrailFeature'  # Corrected to match your specification
+    __tablename__ = 'TrailFeature'
+    __table_args__ = {'schema': 'CW2'}
+    TrailFeatureID = db.Column(db.Integer, primary_key=True)
+    TrailID = db.Column(db.Integer, db.ForeignKey('trail.id'))
+    FeatureName = db.Column(db.String(120))
 
-    trail_feature_id = db.Column(db.Integer, primary_key=True)  
-    TrailID = db.Column(db.Integer, db.ForeignKey('Trail.TrailID'), nullable=False)  # Foreign key now references TrailID
-    feature_name = db.Column(db.String(100), nullable=False)  
+    def to_dict(self):
+        return {
+            'TrailFeatureID': self.id,
+            'TrailID': self.TrailID,
+            'FeatureName': self.FeatureName
+        }
 
-    trail = db.relationship('Trail', backref=db.backref('features', lazy=True))
-
-    def __repr__(self):
-        return f"<TrailFeature {self.feature_name}>"
-    
 class TrailOwnership(db.Model):
-    __tablename__ = 'TrailOwnership'  # Corrected to match your specification
+    __tablename__ = 'TrailOwnership'
+    __table_args__ = {'schema': 'CW2'}
+    OwnershipID = db.Column(db.Integer, primary_key=True)
+    TrailID = db.Column(db.Integer, db.ForeignKey('trail.id'))
+    UserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+    OwnershipDate = db.Column(db.Date)
 
-    ownership_id = db.Column(db.Integer, primary_key=True)  
-    TrailID = db.Column(db.Integer, db.ForeignKey('Trail.TrailID'), nullable=False)  # Foreign key now references TrailID
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.UserID'), nullable=False)  
-    ownership_date = db.Column(db.Date)  
-
-    trail = db.relationship('Trail', backref=db.backref('ownerships', lazy=True))
-    user = db.relationship('User', backref=db.backref('owned_trails', lazy=True))
-
-    def __repr__(self):
-        return f"<TrailOwnership {self.ownership_id}>"
-    
+    def to_dict(self):
+        return {
+            'OwnershipID': self.id,
+            'TrailID': self.TrailID,
+            'UserID': self.UserID,
+            'OwnershipDate': self.OwnershipDate
+        }
 
 class User(db.Model):
-    __tablename__ = 'Users'  # Corrected to match your specification
+    __tablename__ = 'Users'
+    __table_args__ = {'schema': 'CW2'}
+    UserID = db.Column(db.Integer, primary_key=True)
+    Username = db.Column(db.String(120))
+    Email = db.Column(db.String(120))
+    PasswordHash = db.Column(db.String(200))
+    Role = db.Column(db.String(50))
 
-    user_id = db.Column(db.Integer, primary_key=True)  
-    username = db.Column(db.String(100), nullable=False, unique=True)  
-    email = db.Column(db.String(100), nullable=False, unique=True)  
-    password_hash = db.Column(db.String(200), nullable=False)  
-    role = db.Column(db.String(50), nullable=False)  
-
-    def __repr__(self):
-        return f"<User {self.user_id} - {self.username}>"
+    def to_dict(self):
+        return {
+            'UserID': self.id,
+            'Username': self.Username,
+            'Email': self.Email,
+            'Role': self.Role
+        }
