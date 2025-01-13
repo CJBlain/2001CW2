@@ -1,8 +1,13 @@
 from flask import Blueprint, request, jsonify
-from models import db, Trail, Route, TrailFeature, TrailOwnership, User
+from .models import db, Trail, Route, TrailFeature, TrailOwnership, User
 
 
 main = Blueprint('main', __name__)
+
+@main.route('/')
+def home():
+    return "Welcome to the TrailApp!"
+
 
 # ----------- TRAIL endpoints -----------
 @main.route('/trails', methods=['GET'])
