@@ -11,4 +11,7 @@ class Config:
         'mssql+pyodbc://CBlain:HjnF689+@DIST-6-505.uopnet.plymouth.ac.uk/COMP2001_CBlain'
         '?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes'
     )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False  
+    SQLALCHEMY_TRACK_MODIFICATIONS = False 
+
+
+#logs me into the database 

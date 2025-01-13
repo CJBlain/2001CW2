@@ -12,3 +12,6 @@ class Config:
         '?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False  
+
+
+#connects me to the database

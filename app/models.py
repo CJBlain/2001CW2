@@ -16,7 +16,7 @@ class Trail(db.Model):
 
     def to_dict(self):
         return {
-            'TrailID': self.id,
+            'TrailID': self.TrailID,
             'TrailName': self.TrailName,
             'TrailSummary': self.TrailSummary,
             'TrailDescription': self.TrailDescription,
